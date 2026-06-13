@@ -1875,6 +1875,10 @@ function badgeTipoMovimentacaoEstoque(tipo) {
 
 /* AGENDA - SERVIÇOS */
 
+function nomeServicoSelect(nome) {
+  return String(nome || "").replace(/\s*-\s*R\$\s*[\d.,]+.*$/i, "").trim();
+}
+
 function opcoesServicosHtml(servicoSelecionadoId = "") {
   let html = `<option value="">Selecione...</option>`;
 
@@ -1882,7 +1886,7 @@ function opcoesServicosHtml(servicoSelecionadoId = "") {
     .filter(s => s.ativo !== false)
     .forEach(s => {
       const selected = String(s.id) === String(servicoSelecionadoId) ? "selected" : "";
-      html += `<option value="${s.id}" ${selected}>${escapar(s.nome)} - ${dinheiro(s.preco)}</option>`;
+      html += `<option value="${s.id}" ${selected}>${escapar(nomeServicoSelect(s.nome))}</option>`;
     });
 
   return html;

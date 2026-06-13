@@ -594,9 +594,13 @@ th {
 /* RESPONSIVO CELULAR */
 
 @media (max-width: 900px) {
+  :root {
+    --menu-mobile-altura: 60px;
+  }
+
   body {
-    padding-bottom: 120px;
-    font-size: 15px;
+    padding-bottom: calc(var(--menu-mobile-altura) + 18px + env(safe-area-inset-bottom));
+    font-size: 14px;
   }
 
   .app {
@@ -611,24 +615,16 @@ th {
     bottom: 0;
     z-index: 900;
     width: 100%;
-    height: 92px;
-    padding: 10px 10px 18px;
+    height: calc(var(--menu-mobile-altura) + env(safe-area-inset-bottom));
+    padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
     display: flex;
-    gap: 10px;
+    gap: 6px;
     align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     box-shadow: 0 -8px 25px rgba(0,0,0,.22);
-  }
-
-  .sidebar::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.35);
-    border-radius: 999px;
+    overscroll-behavior-x: contain;
   }
 
   .sidebar h2 {
@@ -637,58 +633,66 @@ th {
 
   .sidebar button {
     width: auto;
-    min-width: 118px;
-    height: 52px;
+    min-width: 92px;
+    height: 40px;
     margin: 0;
-    padding: 8px 12px;
+    padding: 6px 8px;
     text-align: center;
-    font-size: 13px;
-    border-radius: 14px;
+    font-size: 11px;
+    border-radius: 10px;
     flex: 0 0 auto;
     white-space: nowrap;
     background: rgba(255,255,255,.13);
   }
 
   .conteudo {
-    padding: 26px 16px 24px;
+    padding: 14px 10px calc(var(--menu-mobile-altura) + 28px + env(safe-area-inset-bottom));
     overflow: visible;
   }
 
   h1 {
-    font-size: 30px;
-    margin-bottom: 22px;
-    letter-spacing: 6px;
+    font-size: 22px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    font-size: 19px;
   }
 
   h3 {
-    font-size: 22px;
+    font-size: 16px;
     margin-top: 0;
+    margin-bottom: 10px;
   }
 
   .painel {
-    padding: 24px;
-    border-radius: 22px;
-    margin-bottom: 18px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
   }
 
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 8px;
   }
 
   .card {
-    padding: 18px;
-    border-radius: 18px;
-    min-height: 96px;
+    padding: 10px;
+    border-radius: 12px;
+    min-height: 66px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.07);
   }
 
   .card span {
-    font-size: 15px;
+    font-size: 12px;
     line-height: 1.25;
   }
 
   .card strong {
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .form-grid,
@@ -697,10 +701,172 @@ th {
   .relatorio-grid,
   .relatorio-grid-graficos {
     grid-template-columns: 1fr;
+    gap: 9px;
   }
 
   .relatorio-filtro-botao {
     grid-column: auto;
+  }
+
+  label {
+    font-size: 13px;
+    margin-top: 9px;
+    margin-bottom: 4px;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 38px;
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 7px 9px;
+  }
+
+  textarea {
+    min-height: 62px;
+  }
+
+  .simulador {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  button {
+    min-height: 38px;
+    font-size: 13px;
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+
+  .check {
+    margin-top: 14px;
+    gap: 10px;
+  }
+
+  .check input {
+    width: 18px;
+    height: 18px;
+  }
+
+  .acoes {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 108px;
+  }
+
+  .btn-acao {
+    width: 100%;
+    min-height: 32px;
+    font-size: 11px;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+
+  .servicos-atendimento-topo {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .btn-adicionar-servico {
+    width: 100%;
+  }
+
+  .servicos-atendimento-box,
+  .materiais-atendimento-box {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  .servicos-atendimento-box h3,
+  .materiais-atendimento-box h3 {
+    font-size: 15px;
+  }
+
+  .tabela-servicos-atendimento input,
+  .tabela-servicos-atendimento select,
+  .tabela-materiais-atendimento input,
+  .tabela-materiais-atendimento select {
+    min-width: 96px;
+    min-height: 34px;
+    padding: 6px 7px;
+  }
+
+  .tabela-servicos-atendimento th:nth-child(1),
+  .tabela-servicos-atendimento td:nth-child(1),
+  .tabela-materiais-atendimento th:nth-child(1),
+  .tabela-materiais-atendimento td:nth-child(1) {
+    min-width: 190px;
+  }
+
+  .tabela-servicos-atendimento th:nth-child(5),
+  .tabela-servicos-atendimento td:nth-child(5),
+  .tabela-materiais-atendimento th:nth-child(5),
+  .tabela-materiais-atendimento td:nth-child(5) {
+    width: 84px;
+  }
+
+  .tabela-servicos-atendimento,
+  .tabela-materiais-atendimento,
+  .tabela-movimentacoes-estoque,
+  .tabela-relatorio,
+  table {
+    min-width: 620px;
+  }
+
+  .tabela-servicos-atendimento {
+    min-width: 680px;
+  }
+
+  .tabela-materiais-atendimento {
+    min-width: 660px;
+  }
+
+  #listaClientes table {
+    min-width: 720px;
+  }
+
+  #listaServicos table,
+  #listaFornecedores table {
+    min-width: 760px;
+  }
+
+  #listaProdutos table {
+    min-width: 980px;
+  }
+
+  #listaMovimentacoesEstoque table {
+    min-width: 940px;
+  }
+
+  #listaAtendimentos table {
+    min-width: 1120px;
+  }
+
+  #listaFinanceiro table {
+    min-width: 1180px;
+  }
+
+  #relServicosMaisVendidos table,
+  #relProdutosMaisUsados table,
+  #relClientesMaisAtendidas table,
+  #relFormasPagamento table,
+  #relResumoFinanceiro table {
+    min-width: 620px;
+  }
+
+  th,
+  td {
+    padding: 7px;
+    font-size: 12px;
   }
 
   .relatorio-acoes,
@@ -713,103 +879,23 @@ th {
     width: 100%;
   }
 
-  label {
-    font-size: 16px;
-    margin-top: 16px;
-  }
-
-  input,
-  select,
-  textarea {
-    min-height: 48px;
-    font-size: 16px;
-    border-radius: 12px;
-    padding: 12px;
-  }
-
-  textarea {
-    min-height: 90px;
-  }
-
-  button {
-    min-height: 48px;
-    font-size: 15px;
-    border-radius: 12px;
-  }
-
-  .check {
-    margin-top: 18px;
-    gap: 12px;
-  }
-
-  .check input {
-    width: 22px;
-    height: 22px;
-  }
-
-  .acoes {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-acao {
-    width: 100%;
-    min-height: 42px;
-    font-size: 13px;
-  }
-
-  .servicos-atendimento-topo {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-adicionar-servico {
-    width: 100%;
-  }
-
-  .servicos-atendimento-box,
-  .materiais-atendimento-box {
-    padding: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .servicos-atendimento-box h3,
-  .materiais-atendimento-box h3 {
-    font-size: 20px;
-  }
-
-  .tabela-servicos-atendimento,
-  .tabela-materiais-atendimento,
-  .tabela-movimentacoes-estoque,
-  .tabela-relatorio,
-  table {
-    min-width: 680px;
-  }
-
-  th,
-  td {
-    padding: 12px;
-    font-size: 14px;
-  }
-
   .grafico-box {
-    height: 250px;
+    height: 210px;
   }
 
   .painel-grafico {
-    min-height: 320px;
+    min-height: 260px;
   }
 
   .modal-overlay {
     align-items: flex-start;
-    padding: 14px;
+    padding: 12px;
     overflow-y: auto;
   }
 
   .modal-card {
-    margin-top: 18px;
-    border-radius: 18px;
+    margin-top: 14px;
+    border-radius: 16px;
   }
 
   .login-body {
@@ -819,16 +905,15 @@ th {
 
   .login-card {
     width: 100%;
-    padding: 28px;
+    padding: 24px;
     border-radius: 18px;
   }
 
   .login-card h1 {
-    font-size: 28px;
+    font-size: 26px;
     letter-spacing: 2px;
   }
 
-  /* Melhoria visual das listas no celular */
   #listaClientes,
   #listaServicos,
   #listaFornecedores,
@@ -841,9 +926,13 @@ th {
   #relClientesMaisAtendidas,
   #relFormasPagamento,
   #relResumoFinanceiro {
-    border-radius: 12px;
+    border-radius: 10px;
     overflow-x: auto;
+    max-width: 100%;
     padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
   }
 
   #listaClientes::after,
@@ -855,71 +944,93 @@ th {
   #listaFinanceiro::after {
     content: "Arraste para o lado para ver mais informações";
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--cinza);
-    margin-top: 8px;
+    margin-top: 6px;
   }
 }
 
 /* CELULARES MENORES */
 
 @media (max-width: 430px) {
+  :root {
+    --menu-mobile-altura: 58px;
+  }
+
   body {
-    padding-bottom: 118px;
+    padding-bottom: calc(var(--menu-mobile-altura) + 16px + env(safe-area-inset-bottom));
   }
 
   .conteudo {
-    padding: 24px 12px 22px;
+    padding: 12px 8px calc(var(--menu-mobile-altura) + 26px + env(safe-area-inset-bottom));
   }
 
   h1 {
-    font-size: 28px;
-    letter-spacing: 5px;
+    font-size: 21px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 18px;
   }
 
   h3 {
-    font-size: 21px;
+    font-size: 15px;
+  }
+
+  .painel {
+    padding: 10px;
+    border-radius: 11px;
   }
 
   .cards {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 7px;
   }
 
   .card {
-    padding: 16px;
-    min-height: 92px;
+    padding: 9px;
+    min-height: 62px;
   }
 
   .card span {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .card strong {
-    font-size: 22px;
+    font-size: 17px;
   }
 
-  .painel {
-    padding: 22px;
-    border-radius: 22px;
+  .relatorio-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .relatorio-cards .card {
+    min-height: 58px;
   }
 
   .sidebar {
-    height: 94px;
-    padding-bottom: 20px;
+    height: calc(var(--menu-mobile-altura) + env(safe-area-inset-bottom));
+    padding: 6px 7px calc(6px + env(safe-area-inset-bottom));
   }
 
   .sidebar button {
-    min-width: 118px;
+    min-width: 86px;
+    height: 38px;
+    font-size: 11px;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 37px;
+    font-size: 16px;
+  }
+
+  button {
+    min-height: 37px;
     font-size: 13px;
-  }
-
-  .login-card {
-    padding: 26px;
-  }
-
-  .login-card h1 {
-    font-size: 26px;
   }
 
   .tabela-servicos-atendimento,
@@ -927,25 +1038,70 @@ th {
   .tabela-movimentacoes-estoque,
   .tabela-relatorio,
   table {
-    min-width: 650px;
+    min-width: 600px;
+  }
+
+  .tabela-servicos-atendimento {
+    min-width: 660px;
+  }
+
+  .tabela-materiais-atendimento {
+    min-width: 640px;
+  }
+
+  #listaClientes table {
+    min-width: 700px;
+  }
+
+  #listaServicos table,
+  #listaFornecedores table {
+    min-width: 730px;
+  }
+
+  #listaProdutos table {
+    min-width: 940px;
+  }
+
+  #listaMovimentacoesEstoque table {
+    min-width: 900px;
+  }
+
+  #listaAtendimentos table {
+    min-width: 1080px;
+  }
+
+  #listaFinanceiro table {
+    min-width: 1120px;
+  }
+
+  #relServicosMaisVendidos table,
+  #relProdutosMaisUsados table,
+  #relClientesMaisAtendidas table,
+  #relFormasPagamento table,
+  #relResumoFinanceiro table {
+    min-width: 580px;
   }
 }
 
 /* CELULARES MUITO ESTREITOS */
 
 @media (max-width: 380px) {
+  :root {
+    --menu-mobile-altura: 56px;
+  }
+
   .conteudo {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 7px;
+    padding-right: 7px;
   }
 
   h1 {
-    font-size: 25px;
-    letter-spacing: 4px;
+    font-size: 20px;
+    letter-spacing: 1px;
   }
 
   .painel {
-    padding: 18px;
+    padding: 10px;
   }
 
   .cards {
@@ -953,24 +1109,237 @@ th {
   }
 
   .card {
-    padding: 14px;
+    padding: 9px;
   }
 
   .card span {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .card strong {
-    font-size: 20px;
+    font-size: 16px;
   }
 
   .sidebar button {
-    min-width: 108px;
-    font-size: 12px;
+    min-width: 82px;
+    font-size: 11px;
+  }
+
+  th,
+  td {
+    padding: 6px;
+    font-size: 11px;
+  }
+
+  .btn-acao {
+    min-height: 30px;
+    font-size: 10px;
+    padding: 5px 7px;
+  }
+
+  .acoes {
+    min-width: 100px;
   }
 }
 
 /* IMPRESSÃO / EXPORTAÇÃO DE RELATÓRIOS */
+
+/* AGENDA MOBILE - SERVICOS E MATERIAIS EM CARDS */
+
+@media (max-width: 900px) {
+  #agenda {
+    padding-bottom: calc(var(--menu-mobile-altura) + 24px + env(safe-area-inset-bottom));
+  }
+
+  #agenda .servicos-atendimento-box,
+  #agenda .materiais-atendimento-box {
+    overflow-x: visible;
+    padding: 11px;
+    border-radius: 12px;
+  }
+
+  #agenda .servicos-atendimento-topo {
+    gap: 10px;
+  }
+
+  #agenda .servicos-atendimento-topo h3 {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  #agenda .btn-adicionar-servico {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  #agenda .tabela-servicos-atendimento,
+  #agenda .tabela-materiais-atendimento {
+    min-width: 0;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+  }
+
+  #agenda .tabela-servicos-atendimento thead,
+  #agenda .tabela-materiais-atendimento thead {
+    display: none;
+  }
+
+  #agenda .tabela-servicos-atendimento tbody,
+  #agenda .tabela-materiais-atendimento tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr,
+  #agenda .tabela-materiais-atendimento tr {
+    display: block;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  }
+
+  #agenda .tabela-servicos-atendimento td,
+  #agenda .tabela-materiais-atendimento td {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    padding: 6px 0;
+    border: 0;
+    font-size: 12px;
+  }
+
+  #agenda .tabela-servicos-atendimento td::before,
+  #agenda .tabela-materiais-atendimento td::before {
+    color: var(--cinza);
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1)::before {
+    content: "Servico";
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2)::before {
+    content: "Preco";
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(3)::before {
+    content: "Desconto";
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(4)::before {
+    content: "Total";
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(5)::before {
+    content: "Acao";
+  }
+
+  #agenda .tabela-materiais-atendimento td:nth-child(1)::before {
+    content: "Material";
+  }
+
+  #agenda .tabela-materiais-atendimento td:nth-child(2)::before {
+    content: "Qtd.";
+  }
+
+  #agenda .tabela-materiais-atendimento td:nth-child(3)::before {
+    content: "Custo Unit.";
+  }
+
+  #agenda .tabela-materiais-atendimento td:nth-child(4)::before {
+    content: "Total";
+  }
+
+  #agenda .tabela-materiais-atendimento td:nth-child(5)::before {
+    content: "Acao";
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1),
+  #agenda .tabela-materiais-atendimento td:nth-child(1) {
+    display: block;
+    min-width: 0;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1)::before,
+  #agenda .tabela-materiais-atendimento td:nth-child(1)::before {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1) select,
+  #agenda .tabela-materiais-atendimento td:nth-child(1) select {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding-right: 34px;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(5),
+  #agenda .tabela-materiais-atendimento td:nth-child(5) {
+    width: 100%;
+    padding-bottom: 4px;
+  }
+
+  #agenda .tabela-servicos-atendimento input,
+  #agenda .tabela-servicos-atendimento select,
+  #agenda .tabela-materiais-atendimento input,
+  #agenda .tabela-materiais-atendimento select {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    font-size: 16px;
+  }
+
+  #agenda .tabela-servicos-atendimento .btn-acao,
+  #agenda .tabela-materiais-atendimento .btn-acao,
+  #agenda .tabela-servicos-atendimento button,
+  #agenda .tabela-materiais-atendimento button {
+    width: 100%;
+    min-height: 38px;
+    margin-top: 0;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 430px) {
+  #agenda {
+    padding-bottom: calc(var(--menu-mobile-altura) + 22px + env(safe-area-inset-bottom));
+  }
+
+  #agenda .servicos-atendimento-box,
+  #agenda .materiais-atendimento-box {
+    padding: 9px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr,
+  #agenda .tabela-materiais-atendimento tr {
+    padding: 9px;
+    border-radius: 11px;
+  }
+
+  #agenda .tabela-servicos-atendimento td,
+  #agenda .tabela-materiais-atendimento td {
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 7px;
+  }
+}
 
 @media print {
   @page {
