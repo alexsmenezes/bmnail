@@ -3,11 +3,30 @@
   font-family: Arial, sans-serif;
 }
 
+:root {
+  --primaria: #be185d;
+  --primaria-escura: #831843;
+  --primaria-hover: #9d174d;
+  --fundo: #f4f4f5;
+  --texto: #222;
+  --cinza: #71717a;
+  --borda: #e4e4e7;
+  --rosa-claro: #fce7f3;
+  --painel: #ffffff;
+  --sombra: 0 2px 10px rgba(0,0,0,.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background: #f4f4f5;
-  color: #222;
+  background: var(--fundo);
+  color: var(--texto);
 }
+
+/* LOGIN */
 
 .login-body {
   min-height: 100vh;
@@ -15,10 +34,12 @@ body {
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #be185d, #ec4899);
+  padding: 20px;
 }
 
 .login-card {
   width: 380px;
+  max-width: 100%;
   background: white;
   padding: 28px;
   border-radius: 16px;
@@ -27,8 +48,16 @@ body {
 
 .login-card h1 {
   margin-top: 0;
-  color: #be185d;
+  color: var(--primaria);
 }
+
+#mensagemErro {
+  color: #dc2626;
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* FORMULÁRIOS */
 
 label {
   display: block;
@@ -46,6 +75,14 @@ textarea {
   border: 1px solid #d4d4d8;
   border-radius: 8px;
   font-size: 14px;
+  background: white;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid rgba(190, 24, 93, .25);
+  border-color: var(--primaria);
 }
 
 textarea {
@@ -57,7 +94,7 @@ button {
   margin-top: 12px;
   padding: 10px 16px;
   border: none;
-  background: #be185d;
+  background: var(--primaria);
   color: white;
   border-radius: 8px;
   cursor: pointer;
@@ -65,14 +102,10 @@ button {
 }
 
 button:hover {
-  background: #9d174d;
+  background: var(--primaria-hover);
 }
 
-#mensagemErro {
-  color: #dc2626;
-  margin-top: 12px;
-  font-weight: bold;
-}
+/* LAYOUT PRINCIPAL */
 
 .app {
   display: flex;
@@ -81,13 +114,15 @@ button:hover {
 
 .sidebar {
   width: 260px;
-  background: #831843;
+  background: var(--primaria-escura);
   color: white;
   padding: 20px;
+  flex-shrink: 0;
 }
 
 .sidebar h2 {
   margin-top: 0;
+  margin-bottom: 22px;
 }
 
 .sidebar button {
@@ -116,9 +151,12 @@ button:hover {
 }
 
 h1 {
-  color: #be185d;
+  color: var(--primaria);
   margin-top: 0;
+  letter-spacing: 2px;
 }
+
+/* DASHBOARD */
 
 .cards {
   display: grid;
@@ -130,26 +168,28 @@ h1 {
   background: white;
   padding: 22px;
   border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  box-shadow: var(--sombra);
 }
 
 .card span {
-  color: #71717a;
+  color: var(--cinza);
   display: block;
   margin-bottom: 8px;
 }
 
 .card strong {
   font-size: 28px;
-  color: #be185d;
+  color: var(--primaria);
 }
 
+/* PAINÉIS */
+
 .painel {
-  background: white;
+  background: var(--painel);
   padding: 20px;
   border-radius: 14px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  box-shadow: var(--sombra);
 }
 
 .check {
@@ -162,6 +202,8 @@ h1 {
   width: auto;
 }
 
+/* TABELAS */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -170,16 +212,18 @@ table {
 
 th,
 td {
-  border: 1px solid #e4e4e7;
+  border: 1px solid var(--borda);
   padding: 10px;
   text-align: left;
   vertical-align: middle;
 }
 
 th {
-  background: #fce7f3;
-  color: #9d174d;
+  background: var(--rosa-claro);
+  color: var(--primaria-hover);
 }
+
+/* GRIDS */
 
 .form-grid {
   display: grid;
@@ -201,8 +245,10 @@ th {
 .simulador input[readonly] {
   background: #fff;
   font-weight: bold;
-  color: #be185d;
+  color: var(--primaria);
 }
+
+/* AÇÕES */
 
 .acoes {
   display: flex;
@@ -259,6 +305,32 @@ th {
   background: #b91c1c;
 }
 
+.btn-secundario {
+  background: #71717a;
+}
+
+.btn-secundario:hover {
+  background: #52525b;
+}
+
+.btn-repor {
+  background: #0ea5e9;
+}
+
+.btn-repor:hover {
+  background: #0284c7;
+}
+
+.btn-excel {
+  background: #16a34a;
+}
+
+.btn-excel:hover {
+  background: #15803d;
+}
+
+/* STATUS */
+
 .status-badge {
   display: inline-block;
   padding: 5px 9px;
@@ -293,6 +365,8 @@ th {
   color: #374151;
 }
 
+/* AGENDA - SERVIÇOS E MATERIAIS */
+
 .servicos-atendimento-box,
 .materiais-atendimento-box {
   margin-top: 18px;
@@ -318,12 +392,12 @@ th {
 
 .servicos-atendimento-topo h3 {
   margin: 0;
-  color: #be185d;
+  color: var(--primaria);
 }
 
 .btn-adicionar-servico {
   margin-top: 0;
-  background: #be185d;
+  background: var(--primaria);
 }
 
 .tabela-servicos-atendimento input,
@@ -345,43 +419,6 @@ th {
 .tabela-materiais-atendimento th:nth-child(5),
 .tabela-materiais-atendimento td:nth-child(5) {
   width: 110px;
-}
-
-@media (max-width: 900px) {
-  .form-grid,
-  .simulador,
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .app {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
-  .acoes {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-acao {
-    width: 100%;
-  }
-
-  .servicos-atendimento-topo {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .tabela-servicos-atendimento,
-  .tabela-materiais-atendimento {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 }
 
 /* MODAL DE REPOSIÇÃO DE ESTOQUE */
@@ -419,7 +456,7 @@ th {
 
 .modal-topo h3 {
   margin: 0;
-  color: #be185d;
+  color: var(--primaria);
 }
 
 .btn-fechar-modal {
@@ -445,41 +482,9 @@ th {
   margin-top: 16px;
 }
 
-.btn-secundario {
-  background: #71717a;
-}
-
-.btn-secundario:hover {
-  background: #52525b;
-}
-
-.btn-repor {
-  background: #0ea5e9;
-}
-
-.btn-repor:hover {
-  background: #0284c7;
-}
-
 .tabela-movimentacoes-estoque th,
 .tabela-movimentacoes-estoque td {
   font-size: 13px;
-}
-
-@media (max-width: 900px) {
-  .modal-acoes {
-    flex-direction: column;
-  }
-
-  .modal-acoes button {
-    width: 100%;
-  }
-
-  .tabela-movimentacoes-estoque {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
 }
 
 /* RELATÓRIOS */
@@ -514,21 +519,6 @@ th {
   max-width: 760px;
 }
 
-@media (max-width: 900px) {
-  .relatorio-filtros,
-  .relatorio-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .tabela-relatorio {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-/* GRÁFICOS DOS RELATÓRIOS */
-
 .relatorio-grid-graficos {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -551,22 +541,6 @@ th {
   height: 100% !important;
 }
 
-@media (max-width: 900px) {
-  .relatorio-grid-graficos {
-    grid-template-columns: 1fr;
-  }
-
-  .painel-grafico {
-    min-height: 320px;
-  }
-
-  .grafico-box {
-    height: 240px;
-  }
-}
-
-/* IMPRESSÃO / EXPORTAÇÃO DE RELATÓRIOS */
-
 .relatorio-cabecalho-impressao {
   display: none;
 }
@@ -578,6 +552,270 @@ th {
   margin-top: 16px;
 }
 
+/* ÁREAS COM TABELA - AJUDA NO CELULAR */
+
+#listaClientes,
+#listaServicos,
+#listaFornecedores,
+#listaProdutos,
+#listaMovimentacoesEstoque,
+#listaAtendimentos,
+#listaFinanceiro,
+#relServicosMaisVendidos,
+#relProdutosMaisUsados,
+#relClientesMaisAtendidas,
+#relFormasPagamento,
+#relResumoFinanceiro {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* RESPONSIVO TABLET */
+
+@media (max-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .relatorio-filtros {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .relatorio-filtro-botao {
+    grid-column: span 2;
+  }
+
+  .simulador {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* RESPONSIVO CELULAR */
+
+@media (max-width: 900px) {
+  body {
+    padding-bottom: 82px;
+  }
+
+  .app {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 900;
+    width: 100%;
+    height: 76px;
+    padding: 8px 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -8px 25px rgba(0,0,0,.22);
+  }
+
+  .sidebar h2 {
+    display: none;
+  }
+
+  .sidebar button {
+    width: auto;
+    min-width: 112px;
+    height: 52px;
+    margin: 0;
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 12px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .conteudo {
+    padding: 18px 14px 24px;
+    overflow: visible;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 18px;
+  }
+
+  .painel {
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .card span {
+    font-size: 13px;
+  }
+
+  .card strong {
+    font-size: 22px;
+  }
+
+  .form-grid,
+  .simulador,
+  .relatorio-filtros,
+  .relatorio-grid,
+  .relatorio-grid-graficos {
+    grid-template-columns: 1fr;
+  }
+
+  .relatorio-filtro-botao {
+    grid-column: auto;
+  }
+
+  .relatorio-acoes,
+  .modal-acoes {
+    flex-direction: column;
+  }
+
+  .relatorio-acoes button,
+  .modal-acoes button {
+    width: 100%;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  button {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .acoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-acao {
+    width: 100%;
+    min-height: 38px;
+    font-size: 12px;
+  }
+
+  .servicos-atendimento-topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-adicionar-servico {
+    width: 100%;
+  }
+
+  .servicos-atendimento-box,
+  .materiais-atendimento-box {
+    padding: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabela-servicos-atendimento,
+  .tabela-materiais-atendimento,
+  .tabela-movimentacoes-estoque,
+  .tabela-relatorio,
+  table {
+    min-width: 760px;
+  }
+
+  .grafico-box {
+    height: 250px;
+  }
+
+  .painel-grafico {
+    min-height: 320px;
+  }
+
+  .modal-overlay {
+    align-items: flex-start;
+    padding: 14px;
+    overflow-y: auto;
+  }
+
+  .modal-card {
+    margin-top: 18px;
+    border-radius: 16px;
+  }
+
+  .login-body {
+    align-items: center;
+    padding: 18px;
+  }
+
+  .login-card {
+    width: 100%;
+    padding: 24px;
+  }
+
+  .login-card h1 {
+    font-size: 28px;
+  }
+}
+
+/* CELULARES MENORES */
+
+@media (max-width: 430px) {
+  .conteudo {
+    padding: 16px 10px 20px;
+  }
+
+  h1 {
+    font-size: 25px;
+    letter-spacing: 1px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .card strong {
+    font-size: 20px;
+  }
+
+  .painel {
+    padding: 14px;
+  }
+
+  .sidebar button {
+    min-width: 98px;
+    font-size: 11px;
+  }
+}
+
+/* IMPRESSÃO / EXPORTAÇÃO DE RELATÓRIOS */
+
 @media print {
   @page {
     size: A4 landscape;
@@ -587,6 +825,7 @@ th {
   body {
     background: white !important;
     color: black !important;
+    padding-bottom: 0 !important;
   }
 
   .sidebar,
@@ -621,13 +860,13 @@ th {
   .relatorio-cabecalho-impressao {
     display: block !important;
     margin-bottom: 14px;
-    border-bottom: 2px solid #be185d;
+    border-bottom: 2px solid var(--primaria);
     padding-bottom: 8px;
   }
 
   .relatorio-cabecalho-impressao h2 {
     margin: 0;
-    color: #be185d;
+    color: var(--primaria);
     font-size: 22px;
   }
 
@@ -677,30 +916,11 @@ th {
 
   table {
     font-size: 11px !important;
+    min-width: 0 !important;
   }
 
   th,
   td {
     padding: 5px !important;
   }
-}
-
-@media (max-width: 900px) {
-  .relatorio-acoes {
-    flex-direction: column;
-  }
-
-  .relatorio-acoes button {
-    width: 100%;
-  }
-}
-
-/* BOTÃO EXCEL */
-
-.btn-excel {
-  background: #16a34a;
-}
-
-.btn-excel:hover {
-  background: #15803d;
 }
