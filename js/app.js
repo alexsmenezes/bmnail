@@ -49,14 +49,49 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-document.getElementById("btnSair").addEventListener("click", async () => {
+async function sairSistema() {
   await signOut(auth);
   window.location.href = "login.html";
+}
+
+document.getElementById("btnSair").addEventListener("click", sairSistema);
+
+const btnAbrirMenuMobile = document.getElementById("btnAbrirMenuMobile");
+const btnFecharMenuMobile = document.getElementById("btnFecharMenuMobile");
+const menuLateralMobile = document.getElementById("menuLateralMobile");
+const mobileDrawerBackdrop = document.getElementById("mobileDrawerBackdrop");
+
+function fecharMenuMobile() {
+  if (!btnAbrirMenuMobile || !menuLateralMobile || !mobileDrawerBackdrop) return;
+
+  document.body.classList.remove("menu-mobile-aberto");
+  btnAbrirMenuMobile.setAttribute("aria-expanded", "false");
+  menuLateralMobile.classList.remove("aberto");
+  mobileDrawerBackdrop.setAttribute("aria-hidden", "true");
+}
+
+function abrirMenuMobile() {
+  if (!btnAbrirMenuMobile || !menuLateralMobile || !mobileDrawerBackdrop) return;
+
+  document.body.classList.add("menu-mobile-aberto");
+  btnAbrirMenuMobile.setAttribute("aria-expanded", "true");
+  menuLateralMobile.classList.add("aberto");
+  mobileDrawerBackdrop.setAttribute("aria-hidden", "false");
+}
+
+btnAbrirMenuMobile?.addEventListener("click", abrirMenuMobile);
+btnFecharMenuMobile?.addEventListener("click", fecharMenuMobile);
+mobileDrawerBackdrop?.addEventListener("click", fecharMenuMobile);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") fecharMenuMobile();
 });
 
 window.mostrarTela = async function(id) {
   document.querySelectorAll(".tela").forEach(tela => tela.classList.remove("ativa"));
   document.getElementById(id).classList.add("ativa");
+  fecharMenuMobile();
+  atualizarNavAtiva(id);
 
   if (id === "agenda") await carregarAtendimentos();
   if (id === "financeiro") await carregarFinanceiro();
@@ -69,6 +104,12 @@ window.mostrarTela = async function(id) {
 
   atualizarDashboard();
 };
+
+function atualizarNavAtiva(id) {
+  document.querySelectorAll(".nav-item[data-tela]").forEach(botao => {
+    botao.classList.toggle("ativo", botao.getAttribute("data-tela") === id);
+  });
+}
 
 async function iniciarSistema() {
   conectarEventos();
@@ -86,6 +127,7 @@ async function iniciarSistema() {
   atualizarSimulacaoAgenda();
   atualizarDashboard();
   atualizarRelatorios();
+  atualizarNavAtiva("dashboard");
 }
 
 function conectarEventos() {

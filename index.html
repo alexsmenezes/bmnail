@@ -4,24 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema Nail Design</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=mobile-drawer-6">
 </head>
 <body>
 
+  <button id="btnAbrirMenuMobile" class="menu-mobile-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuLateralMobile">☰</button>
+  <div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" aria-hidden="true"></div>
+
   <div class="app">
 
-    <aside class="sidebar">
-      <h2>💅 Sistema Nail</h2>
+    <aside id="menuLateralMobile" class="sidebar">
+      <div class="mobile-drawer-header">
+        <h2>💅 Sistema Nail</h2>
+        <button id="btnFecharMenuMobile" class="mobile-drawer-close" type="button" aria-label="Fechar menu">×</button>
+      </div>
 
-      <button onclick="mostrarTela('dashboard')">🏠 Dashboard</button>
-      <button onclick="mostrarTela('clientes')">👥 Clientes</button>
-      <button onclick="mostrarTela('servicos')">💅 Serviços</button>
-      <button onclick="mostrarTela('produtos')">🧴 Produtos</button>
-      <button onclick="mostrarTela('fornecedores')">🏪 Fornecedores</button>
-      <button onclick="mostrarTela('agenda')">📅 Agenda</button>
-      <button onclick="mostrarTela('financeiro')">💰 Financeiro</button>
-      <button onclick="mostrarTela('relatorios')">📊 Relatórios</button>
-      <button id="btnSair">🚪 Sair</button>
+      <button class="nav-item nav-dashboard" data-tela="dashboard" onclick="mostrarTela('dashboard')">🏠 Dashboard</button>
+      <button class="nav-item nav-clientes" data-tela="clientes" onclick="mostrarTela('clientes')">👥 Clientes</button>
+      <button class="nav-item nav-servicos" data-tela="servicos" onclick="mostrarTela('servicos')">💅 Serviços</button>
+      <button class="nav-item nav-produtos nav-extra-mobile" data-tela="produtos" onclick="mostrarTela('produtos')">🧴 Produtos</button>
+      <button class="nav-item nav-fornecedores nav-extra-mobile" data-tela="fornecedores" onclick="mostrarTela('fornecedores')">🏪 Fornecedores</button>
+      <button class="nav-item nav-agenda" data-tela="agenda" onclick="mostrarTela('agenda')">📅 Agenda</button>
+      <button class="nav-item nav-financeiro nav-extra-mobile" data-tela="financeiro" onclick="mostrarTela('financeiro')">💰 Financeiro</button>
+      <button class="nav-item nav-relatorios nav-extra-mobile" data-tela="relatorios" onclick="mostrarTela('relatorios')">📊 Relatórios</button>
+      <button id="btnSair" class="nav-item nav-sair nav-extra-mobile">🚪 Sair</button>
     </aside>
 
     <main class="conteudo">
@@ -700,6 +706,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=mobile-drawer-6"></script>
 </body>
 </html>

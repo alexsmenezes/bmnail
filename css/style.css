@@ -595,11 +595,18 @@ th {
 
 @media (max-width: 900px) {
   :root {
-    --menu-mobile-altura: 60px;
+    --menu-mobile-altura: 50px;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
-    padding-bottom: calc(var(--menu-mobile-altura) + 18px + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--menu-mobile-altura) + 24px + env(safe-area-inset-bottom));
     font-size: 14px;
   }
 
@@ -611,20 +618,35 @@ th {
   .sidebar {
     position: fixed;
     left: 0;
-    right: 0;
     bottom: 0;
     z-index: 900;
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
     height: calc(var(--menu-mobile-altura) + env(safe-area-inset-bottom));
-    padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    padding: 5px 7px calc(5px + env(safe-area-inset-bottom));
     display: flex;
-    gap: 6px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 5px;
     align-items: center;
-    overflow-x: auto;
+    overflow-x: scroll;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    box-shadow: 0 -8px 25px rgba(0,0,0,.22);
+    box-shadow: 0 -5px 18px rgba(0,0,0,.2);
     overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    touch-action: pan-x;
+    white-space: nowrap;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.28);
+    border-radius: 999px;
   }
 
   .sidebar h2 {
@@ -633,20 +655,21 @@ th {
 
   .sidebar button {
     width: auto;
-    min-width: 92px;
-    height: 40px;
+    min-width: 78px;
+    height: 34px;
     margin: 0;
-    padding: 6px 8px;
+    padding: 5px 7px;
     text-align: center;
-    font-size: 11px;
-    border-radius: 10px;
+    font-size: 10px;
+    border-radius: 9px;
     flex: 0 0 auto;
     white-space: nowrap;
+    touch-action: manipulation;
     background: rgba(255,255,255,.13);
   }
 
   .conteudo {
-    padding: 14px 10px calc(var(--menu-mobile-altura) + 28px + env(safe-area-inset-bottom));
+    padding: 14px 10px calc(var(--menu-mobile-altura) + 36px + env(safe-area-inset-bottom));
     overflow: visible;
   }
 
@@ -851,6 +874,147 @@ th {
     min-width: 1120px;
   }
 
+  #agenda #listaAtendimentos {
+    overflow-x: visible !important;
+    padding-bottom: 0;
+  }
+
+  #agenda #listaAtendimentos::after {
+    content: none;
+  }
+
+  #agenda #listaAtendimentos table {
+    display: block !important;
+    width: 100%;
+    min-width: 0 !important;
+    background: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  #agenda #listaAtendimentos thead {
+    display: none !important;
+  }
+
+  #agenda #listaAtendimentos tbody {
+    display: grid !important;
+    gap: 12px;
+  }
+
+  #agenda #listaAtendimentos tr {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 10px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  }
+
+  #agenda #listaAtendimentos td {
+    display: grid !important;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  #agenda #listaAtendimentos td::before {
+    color: var(--cinza);
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1)::before {
+    content: "Data";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(2)::before {
+    content: "Hora";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(4)::before {
+    content: "Serviço(s)";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(5)::before {
+    content: "Pagamento";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(7)::before {
+    content: "Líquido";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(8)::before {
+    content: "Materiais";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(9)::before {
+    content: "Lucro Real";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(10)::before {
+    content: "Status";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    content: "Ações";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3),
+  #agenda #listaAtendimentos td:nth-child(4),
+  #agenda #listaAtendimentos td:nth-child(10),
+  #agenda #listaAtendimentos td:nth-child(11) {
+    grid-column: 1 / -1;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3) {
+    display: block !important;
+    color: var(--primaria-escura);
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before,
+  #agenda #listaAtendimentos td:nth-child(4)::before,
+  #agenda #listaAtendimentos td:nth-child(10)::before,
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .acoes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .btn-acao {
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+
   #listaFinanceiro table {
     min-width: 1180px;
   }
@@ -954,15 +1118,15 @@ th {
 
 @media (max-width: 430px) {
   :root {
-    --menu-mobile-altura: 58px;
+    --menu-mobile-altura: 48px;
   }
 
   body {
-    padding-bottom: calc(var(--menu-mobile-altura) + 16px + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--menu-mobile-altura) + 24px + env(safe-area-inset-bottom));
   }
 
   .conteudo {
-    padding: 12px 8px calc(var(--menu-mobile-altura) + 26px + env(safe-area-inset-bottom));
+    padding: 12px 8px calc(var(--menu-mobile-altura) + 36px + env(safe-area-inset-bottom));
   }
 
   h1 {
@@ -1012,13 +1176,13 @@ th {
 
   .sidebar {
     height: calc(var(--menu-mobile-altura) + env(safe-area-inset-bottom));
-    padding: 6px 7px calc(6px + env(safe-area-inset-bottom));
+    padding: 5px 6px calc(5px + env(safe-area-inset-bottom));
   }
 
   .sidebar button {
-    min-width: 86px;
-    height: 38px;
-    font-size: 11px;
+    min-width: 74px;
+    height: 32px;
+    font-size: 10px;
   }
 
   input,
@@ -1070,6 +1234,146 @@ th {
     min-width: 1080px;
   }
 
+  #agenda #listaAtendimentos {
+    overflow-x: visible !important;
+    padding-bottom: 0;
+  }
+
+  #agenda #listaAtendimentos::after {
+    content: none;
+  }
+
+  #agenda #listaAtendimentos table {
+    display: block !important;
+    width: 100%;
+    min-width: 0 !important;
+    background: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  #agenda #listaAtendimentos thead {
+    display: none !important;
+  }
+
+  #agenda #listaAtendimentos tbody {
+    display: grid !important;
+    gap: 12px;
+  }
+
+  #agenda #listaAtendimentos tr {
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  }
+
+  #agenda #listaAtendimentos td {
+    display: grid !important;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  #agenda #listaAtendimentos td::before {
+    color: var(--cinza);
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1)::before {
+    content: "Data";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(2)::before {
+    content: "Hora";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(4)::before {
+    content: "Serviço(s)";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(5)::before {
+    content: "Pagamento";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(7)::before {
+    content: "Líquido";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(8)::before {
+    content: "Materiais";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(9)::before {
+    content: "Lucro Real";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(10)::before {
+    content: "Status";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    content: "Ações";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3),
+  #agenda #listaAtendimentos td:nth-child(4),
+  #agenda #listaAtendimentos td:nth-child(10),
+  #agenda #listaAtendimentos td:nth-child(11) {
+    display: block !important;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3) {
+    color: var(--primaria-escura);
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before,
+  #agenda #listaAtendimentos td:nth-child(4)::before,
+  #agenda #listaAtendimentos td:nth-child(10)::before,
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .acoes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .btn-acao {
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+
   #listaFinanceiro table {
     min-width: 1120px;
   }
@@ -1087,7 +1391,7 @@ th {
 
 @media (max-width: 380px) {
   :root {
-    --menu-mobile-altura: 56px;
+    --menu-mobile-altura: 46px;
   }
 
   .conteudo {
@@ -1121,8 +1425,8 @@ th {
   }
 
   .sidebar button {
-    min-width: 82px;
-    font-size: 11px;
+    min-width: 70px;
+    font-size: 10px;
   }
 
   th,
@@ -1175,6 +1479,10 @@ th {
     text-align: center;
   }
 
+  #agenda .servicos-atendimento-box {
+    overflow-x: hidden;
+  }
+
   #agenda .tabela-servicos-atendimento,
   #agenda .tabela-materiais-atendimento {
     min-width: 0;
@@ -1203,6 +1511,15 @@ th {
     border: 1px solid var(--borda);
     border-radius: 12px;
     box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  }
+
+  #agenda .tabela-servicos-atendimento tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+    padding: 12px;
+    border-color: #f9a8d4;
+    box-shadow: 0 2px 10px rgba(190,24,93,.08);
   }
 
   #agenda .tabela-servicos-atendimento td,
@@ -1272,10 +1589,35 @@ th {
     min-width: 0;
   }
 
+  #agenda .tabela-servicos-atendimento td:nth-child(1) {
+    grid-column: 1 / -1;
+    padding-bottom: 2px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2),
+  #agenda .tabela-servicos-atendimento td:nth-child(3),
+  #agenda .tabela-servicos-atendimento td:nth-child(4) {
+    display: block;
+    padding: 0;
+  }
+
   #agenda .tabela-servicos-atendimento td:nth-child(1)::before,
   #agenda .tabela-materiais-atendimento td:nth-child(1)::before {
     display: block;
     margin-bottom: 5px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1)::before {
+    color: var(--primaria);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2)::before,
+  #agenda .tabela-servicos-atendimento td:nth-child(3)::before,
+  #agenda .tabela-servicos-atendimento td:nth-child(4)::before {
+    display: block;
+    margin-bottom: 4px;
   }
 
   #agenda .tabela-servicos-atendimento td:nth-child(1) select,
@@ -1290,10 +1632,23 @@ th {
     text-overflow: ellipsis;
   }
 
+  #agenda .tabela-servicos-atendimento td:nth-child(1) select {
+    min-height: 46px;
+    border-color: #f9a8d4;
+    background-color: #fff7fb;
+    color: var(--primaria-escura);
+    font-weight: bold;
+  }
+
   #agenda .tabela-servicos-atendimento td:nth-child(5),
   #agenda .tabela-materiais-atendimento td:nth-child(5) {
     width: 100%;
     padding-bottom: 4px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(5) {
+    grid-column: 1 / -1;
+    padding-top: 2px;
   }
 
   #agenda .tabela-servicos-atendimento input,
@@ -1338,6 +1693,219 @@ th {
   #agenda .tabela-materiais-atendimento td {
     grid-template-columns: 82px minmax(0, 1fr);
     gap: 7px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2),
+  #agenda .tabela-servicos-atendimento td:nth-child(3),
+  #agenda .tabela-servicos-atendimento td:nth-child(4) {
+    display: grid;
+    grid-template-columns: 82px minmax(0, 1fr);
+    gap: 7px;
+    align-items: center;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2)::before,
+  #agenda .tabela-servicos-atendimento td:nth-child(3)::before,
+  #agenda .tabela-servicos-atendimento td:nth-child(4)::before {
+    margin-bottom: 0;
+  }
+}
+
+/* AGENDA MOBILE - LISTA DE ATENDIMENTOS EM CARDS */
+
+@media (max-width: 900px) {
+  #agenda #listaAtendimentos {
+    overflow-x: visible !important;
+    padding-bottom: 0;
+  }
+
+  #agenda #listaAtendimentos::after {
+    content: none;
+  }
+
+  #agenda #listaAtendimentos table {
+    display: block;
+    width: 100%;
+    min-width: 0 !important;
+    background: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  #agenda #listaAtendimentos thead {
+    display: none;
+  }
+
+  #agenda #listaAtendimentos tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  #agenda #listaAtendimentos tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 10px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07);
+  }
+
+  #agenda #listaAtendimentos td {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  #agenda #listaAtendimentos td::before {
+    color: var(--cinza);
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1),
+  #agenda #listaAtendimentos td:nth-child(2) {
+    display: block;
+    padding: 8px;
+    background: #fff7fb;
+    border-radius: 10px;
+    color: var(--primaria-escura);
+    font-weight: bold;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1)::before,
+  #agenda #listaAtendimentos td:nth-child(2)::before {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--primaria);
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1)::before {
+    content: "Data";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(2)::before {
+    content: "Hora";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3),
+  #agenda #listaAtendimentos td:nth-child(4),
+  #agenda #listaAtendimentos td:nth-child(10),
+  #agenda #listaAtendimentos td:nth-child(11) {
+    grid-column: 1 / -1;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3) {
+    display: block;
+    color: var(--primaria-escura);
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 2px;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before,
+  #agenda #listaAtendimentos td:nth-child(4)::before,
+  #agenda #listaAtendimentos td:nth-child(10)::before,
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(4)::before {
+    content: "Serviço(s)";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(5)::before {
+    content: "Pagamento";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(7)::before {
+    content: "Líquido";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(8)::before {
+    content: "Materiais";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(9)::before {
+    content: "Lucro Real";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(10)::before {
+    content: "Status";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11)::before {
+    content: "Ações";
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .acoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .btn-acao {
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 9px;
+  }
+}
+
+@media (max-width: 430px) {
+  #agenda #listaAtendimentos tbody {
+    gap: 10px;
+  }
+
+  #agenda #listaAtendimentos tr {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 11px;
+  }
+
+  #agenda #listaAtendimentos td {
+    grid-template-columns: 92px minmax(0, 1fr);
+    font-size: 12px;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(1),
+  #agenda #listaAtendimentos td:nth-child(2) {
+    grid-column: 1 / -1;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .acoes {
+    grid-template-columns: 1fr;
+  }
+
+  #agenda #listaAtendimentos td:nth-child(11) .btn-acao {
+    min-height: 38px;
   }
 }
 
@@ -1447,5 +2015,733 @@ th {
   th,
   td {
     padding: 5px !important;
+  }
+}
+
+/* OVERRIDE FINAL - AGENDA MOBILE ATENDIMENTOS EM CARDS */
+
+@media (max-width: 900px) {
+  #agenda #listaAtendimentos {
+    overflow-x: visible !important;
+    max-width: 100% !important;
+    padding-bottom: 0 !important;
+    touch-action: auto !important;
+  }
+
+  #agenda #listaAtendimentos::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  #agenda #listaAtendimentos table,
+  #agenda #listaAtendimentos thead,
+  #agenda #listaAtendimentos tbody,
+  #agenda #listaAtendimentos th,
+  #agenda #listaAtendimentos td,
+  #agenda #listaAtendimentos tr {
+    display: block !important;
+  }
+
+  #agenda #listaAtendimentos thead {
+    display: none !important;
+  }
+
+  #agenda #listaAtendimentos table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    border: 0 !important;
+    border-collapse: separate !important;
+    background: transparent !important;
+  }
+
+  #agenda #listaAtendimentos tbody {
+    width: 100% !important;
+  }
+
+  #agenda #listaAtendimentos tbody tr {
+    width: 100% !important;
+    min-width: 0 !important;
+    background: #fff !important;
+    border: 1px solid #eee !important;
+    border-radius: 14px !important;
+    padding: 12px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+  }
+
+  #agenda #listaAtendimentos tbody td {
+    width: 100% !important;
+    min-width: 0 !important;
+    border: 0 !important;
+    border-bottom: 1px solid #f1f1f1 !important;
+    padding: 8px 0 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:last-child {
+    border-bottom: 0 !important;
+  }
+
+  #agenda #listaAtendimentos tbody td::before {
+    font-weight: 700 !important;
+    color: var(--primaria) !important;
+    min-width: 90px !important;
+    flex-shrink: 0 !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(1)::before {
+    content: "Data";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(2)::before {
+    content: "Hora";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(4)::before {
+    content: "Serviço(s)";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(5)::before {
+    content: "Forma";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(6)::before {
+    content: "Total";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(7)::before {
+    content: "Líquido";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(8)::before {
+    content: "Materiais";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(9)::before {
+    content: "Lucro";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(10)::before {
+    content: "Status";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(11)::before {
+    content: "Ações";
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(3),
+  #agenda #listaAtendimentos tbody td:nth-child(4),
+  #agenda #listaAtendimentos tbody td:nth-child(10),
+  #agenda #listaAtendimentos tbody td:nth-child(11) {
+    display: block !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(3)::before,
+  #agenda #listaAtendimentos tbody td:nth-child(4)::before,
+  #agenda #listaAtendimentos tbody td:nth-child(10)::before,
+  #agenda #listaAtendimentos tbody td:nth-child(11)::before {
+    display: block !important;
+    margin-bottom: 4px !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(3) {
+    color: var(--primaria-escura) !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(11) .acoes {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 4px !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(11) .btn-acao {
+    width: 100% !important;
+    min-height: 40px !important;
+    margin: 0 !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
+    border-radius: 9px !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 430px) {
+  #agenda #listaAtendimentos tbody tr {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  #agenda #listaAtendimentos tbody td {
+    font-size: 12px !important;
+    gap: 10px !important;
+  }
+
+  #agenda #listaAtendimentos tbody td::before {
+    min-width: 82px !important;
+  }
+
+  #agenda #listaAtendimentos tbody td:nth-child(11) .acoes {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* AGENDA MOBILE - REFINO FINAL DO FORMULARIO */
+
+@media screen and (max-width: 900px) {
+  #agenda {
+    max-width: 100%;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--menu-mobile-altura) + 34px + env(safe-area-inset-bottom));
+  }
+
+  #agenda > .painel:first-of-type {
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(190,24,93,.08);
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  }
+
+  #agenda > .painel:first-of-type > h3 {
+    margin-bottom: 12px;
+    color: var(--primaria);
+    font-size: 17px;
+  }
+
+  #agenda > .painel:first-of-type label {
+    margin-top: 10px;
+  }
+
+  #agenda > .painel:first-of-type input,
+  #agenda > .painel:first-of-type select,
+  #agenda > .painel:first-of-type textarea {
+    min-height: 42px;
+    font-size: 16px;
+  }
+
+  #agenda .servicos-atendimento-box,
+  #agenda .materiais-atendimento-box {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border-radius: 13px;
+  }
+
+  #agenda .servicos-atendimento-box {
+    background: #fff7fb;
+  }
+
+  #agenda .materiais-atendimento-box {
+    background: #f8fbff;
+  }
+
+  #agenda .servicos-atendimento-topo {
+    margin-bottom: 10px;
+  }
+
+  #agenda .servicos-atendimento-topo h3 {
+    font-size: 16px;
+  }
+
+  #agenda .btn-adicionar-servico {
+    min-height: 44px;
+    border-radius: 11px;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(190,24,93,.18);
+  }
+
+  #agenda .tabela-servicos-atendimento tbody,
+  #agenda .tabela-materiais-atendimento tbody {
+    gap: 9px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr,
+  #agenda .tabela-materiais-atendimento tr {
+    border-radius: 13px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr {
+    padding: 11px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(1) select {
+    width: 100%;
+    max-width: 100%;
+    min-height: 46px;
+    padding-right: 36px;
+    font-size: 16px;
+    text-overflow: ellipsis;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2),
+  #agenda .tabela-servicos-atendimento td:nth-child(3),
+  #agenda .tabela-servicos-atendimento td:nth-child(4) {
+    min-width: 0;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(2) input,
+  #agenda .tabela-servicos-atendimento td:nth-child(3) input,
+  #agenda .tabela-servicos-atendimento td:nth-child(4) input {
+    min-height: 40px;
+    font-size: 16px;
+  }
+
+  #agenda .tabela-servicos-atendimento td:nth-child(5) button,
+  #agenda .tabela-materiais-atendimento td:nth-child(5) button {
+    min-height: 42px;
+    border-radius: 10px;
+  }
+
+  #agenda .materiais-atendimento-box .tabela-materiais-atendimento tbody:empty {
+    display: none;
+  }
+
+  #agenda .simulador {
+    margin-top: 12px;
+    padding: 11px;
+    border-radius: 13px;
+    gap: 9px;
+  }
+
+  #agenda .simulador label {
+    font-size: 12px;
+  }
+
+  #agenda .simulador input {
+    min-height: 39px;
+    font-size: 16px;
+  }
+
+  #agenda #btnSalvarAtendimento {
+    width: 100%;
+    min-height: 46px;
+    margin-top: 14px;
+    border-radius: 12px;
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  #agenda {
+    padding-bottom: calc(var(--menu-mobile-altura) + 30px + env(safe-area-inset-bottom));
+  }
+
+  #agenda > .painel:first-of-type {
+    padding: 12px;
+  }
+
+  #agenda .servicos-atendimento-box,
+  #agenda .materiais-atendimento-box {
+    padding: 9px;
+  }
+
+  #agenda .tabela-servicos-atendimento tr,
+  #agenda .tabela-materiais-atendimento tr {
+    padding: 9px;
+  }
+
+  #agenda .simulador {
+    padding: 10px;
+  }
+}
+
+/* MOBILE - RESPIRO INFERIOR PARA MENU FIXO */
+
+@media screen and (max-width: 900px) {
+  .conteudo {
+    padding-bottom: calc(var(--menu-mobile-altura) + 64px + env(safe-area-inset-bottom));
+  }
+
+  .tela {
+    padding-bottom: calc(var(--menu-mobile-altura) + 38px + env(safe-area-inset-bottom));
+  }
+
+  #agenda {
+    padding-bottom: calc(var(--menu-mobile-altura) + 74px + env(safe-area-inset-bottom));
+  }
+
+  #agenda #btnSalvarAtendimento {
+    margin-bottom: calc(var(--menu-mobile-altura) + 18px + env(safe-area-inset-bottom));
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .conteudo {
+    padding-bottom: calc(var(--menu-mobile-altura) + 68px + env(safe-area-inset-bottom));
+  }
+
+  .tela {
+    padding-bottom: calc(var(--menu-mobile-altura) + 42px + env(safe-area-inset-bottom));
+  }
+
+  #agenda {
+    padding-bottom: calc(var(--menu-mobile-altura) + 78px + env(safe-area-inset-bottom));
+  }
+}
+
+/* MOBILE - NAVEGACAO PRINCIPAL COM MENU MAIS */
+
+.nav-mais-mobile,
+.menu-mais-mobile {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .sidebar {
+    overflow: visible;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .sidebar .nav-extra-mobile {
+    display: none;
+  }
+
+  .sidebar .nav-dashboard {
+    order: 1;
+  }
+
+  .sidebar .nav-agenda {
+    order: 2;
+  }
+
+  .sidebar .nav-clientes {
+    order: 3;
+  }
+
+  .sidebar .nav-servicos {
+    order: 4;
+  }
+
+  .sidebar .nav-mais-mobile {
+    display: block;
+    order: 5;
+  }
+
+  .sidebar .nav-item {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 78px;
+    height: 38px;
+    padding: 4px 5px;
+    font-size: 10px;
+    line-height: 1.1;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .sidebar .nav-item.ativo,
+  .sidebar .nav-mais-mobile.ativo {
+    background: rgba(255,255,255,.28);
+  }
+
+  .menu-mais-mobile {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: calc(var(--menu-mobile-altura) + 12px + env(safe-area-inset-bottom));
+    z-index: 950;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid rgba(190,24,93,.16);
+    border-radius: 16px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.24);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+
+  .menu-mais-mobile.aberto {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .menu-mais-mobile button {
+    min-height: 44px;
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 11px;
+    background: var(--rosa-claro);
+    color: var(--primaria-escura);
+    font-size: 14px;
+    text-align: left;
+  }
+
+  .menu-mais-mobile button:hover {
+    background: #fbcfe8;
+  }
+
+  .menu-mais-mobile #btnSairMobile {
+    grid-column: 1 / -1;
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .sidebar .nav-item {
+    max-width: 72px;
+    height: 36px;
+    font-size: 9px;
+    padding: 4px;
+  }
+
+  .menu-mais-mobile {
+    left: 8px;
+    right: 8px;
+    padding: 10px;
+    gap: 7px;
+  }
+
+  .menu-mais-mobile button {
+    min-height: 42px;
+    font-size: 13px;
+  }
+}
+
+/* MOBILE - MENU LATERAL OFFCANVAS */
+
+.menu-mobile-toggle,
+.mobile-drawer-close,
+.mobile-drawer-backdrop {
+  display: none;
+}
+
+.mobile-drawer-header {
+  display: contents;
+}
+
+@media screen and (max-width: 900px) {
+  :root {
+    --mobile-topbar-altura: 58px;
+  }
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    padding-bottom: 0;
+  }
+
+  body.menu-mobile-aberto {
+    overflow: hidden;
+  }
+
+  .menu-mobile-toggle {
+    position: fixed;
+    top: calc(10px + env(safe-area-inset-top));
+    left: 12px;
+    z-index: 1100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border-radius: 14px;
+    background: var(--primaria);
+    color: #fff;
+    box-shadow: 0 8px 22px rgba(190,24,93,.24);
+    font-size: 23px;
+    line-height: 1;
+  }
+
+  .mobile-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 980;
+    display: block;
+    background: rgba(15, 10, 18, .42);
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
+  }
+
+  body.menu-mobile-aberto .mobile-drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .app {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -340px;
+    bottom: auto;
+    z-index: 1000;
+    width: min(84vw, 320px);
+    max-width: 320px;
+    height: 100dvh;
+    min-height: 100vh;
+    padding: calc(16px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: normal;
+    transform: none;
+    transition: none;
+    border-radius: 0 22px 22px 0;
+    box-shadow: 18px 0 44px rgba(0,0,0,.24);
+    touch-action: pan-y;
+  }
+
+  body.menu-mobile-aberto .sidebar,
+  .sidebar.aberto {
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sidebar h2 {
+    display: block;
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .mobile-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    border-radius: 12px;
+    background: rgba(255,255,255,.14);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .sidebar .nav-item,
+  .sidebar .nav-extra-mobile,
+  .sidebar .nav-sair {
+    display: block;
+  }
+
+  .sidebar .nav-mais-mobile,
+  .menu-mais-mobile {
+    display: none !important;
+  }
+
+  .sidebar .nav-item {
+    order: initial;
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    height: auto;
+    min-height: 46px;
+    margin: 0;
+    padding: 12px 13px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.2;
+    text-align: left;
+    white-space: normal;
+    touch-action: manipulation;
+  }
+
+  .sidebar .nav-item:hover,
+  .sidebar .nav-item.ativo {
+    background: rgba(255,255,255,.24);
+  }
+
+  .sidebar .nav-sair {
+    margin-top: auto;
+    background: rgba(254,226,226,.18);
+  }
+
+  .conteudo {
+    padding: calc(var(--mobile-topbar-altura) + env(safe-area-inset-top)) 10px 24px;
+    overflow: visible;
+  }
+
+  .tela,
+  #agenda {
+    padding-bottom: 24px;
+  }
+
+  #agenda #btnSalvarAtendimento {
+    margin-bottom: 14px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .menu-mobile-toggle {
+    top: calc(9px + env(safe-area-inset-top));
+    left: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+  }
+
+  .sidebar {
+    width: min(86vw, 304px);
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .sidebar .nav-item {
+    max-width: none;
+    min-height: 44px;
+    height: auto;
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  .conteudo {
+    padding-top: calc(56px + env(safe-area-inset-top));
+    padding-bottom: 22px;
   }
 }
