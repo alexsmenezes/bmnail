@@ -2535,7 +2535,8 @@ th {
 
 @media screen and (max-width: 900px) {
   :root {
-    --mobile-topbar-altura: 58px;
+    --mobile-topbar-altura: 76px;
+    --mobile-drawer-largura: min(82vw, 300px);
   }
 
   html,
@@ -2553,24 +2554,31 @@ th {
     overflow: hidden;
   }
 
+  body.menu-mobile-aberto .menu-mobile-toggle {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
   .menu-mobile-toggle {
     position: fixed;
-    top: calc(10px + env(safe-area-inset-top));
+    top: calc(12px + env(safe-area-inset-top));
     left: 12px;
     z-index: 1100;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     margin: 0;
     padding: 0;
     border-radius: 14px;
-    background: var(--primaria);
+    background: linear-gradient(135deg, var(--primaria), var(--primaria-escura));
     color: #fff;
-    box-shadow: 0 8px 22px rgba(190,24,93,.24);
-    font-size: 23px;
+    visibility: visible;
+    box-shadow: 0 10px 24px rgba(190,24,93,.28);
+    font-size: 22px;
     line-height: 1;
+    transition: opacity .16s ease, background .16s ease, transform .16s ease;
   }
 
   .mobile-drawer-backdrop {
@@ -2578,14 +2586,14 @@ th {
     inset: 0;
     z-index: 980;
     display: block;
-    background: rgba(15, 10, 18, .42);
-    opacity: 0;
+    background: rgba(15, 10, 18, 0);
+    opacity: 1;
     pointer-events: none;
     transition: none;
   }
 
   body.menu-mobile-aberto .mobile-drawer-backdrop {
-    opacity: 1;
+    background: rgba(0,0,0,.35) !important;
     pointer-events: auto;
   }
 
@@ -2597,20 +2605,20 @@ th {
   .sidebar {
     position: fixed;
     top: 0;
-    left: -340px;
+    left: calc((var(--mobile-drawer-largura) + 14px) * -1);
     bottom: auto;
     z-index: 1000;
-    width: min(84vw, 320px);
-    max-width: 320px;
+    width: var(--mobile-drawer-largura);
+    max-width: 300px;
     height: 100dvh;
     min-height: 100vh;
-    padding: calc(16px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom));
+    padding: calc(16px + env(safe-area-inset-top)) 15px calc(26px + env(safe-area-inset-bottom));
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 8px;
+    gap: 10px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -2618,7 +2626,7 @@ th {
     transform: none;
     transition: none;
     border-radius: 0 22px 22px 0;
-    box-shadow: 18px 0 44px rgba(0,0,0,.24);
+    box-shadow: 14px 0 36px rgba(0,0,0,.20);
     touch-action: pan-y;
   }
 
@@ -2633,15 +2641,23 @@ th {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
+    min-height: 50px;
+    margin-bottom: 15px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,.16);
   }
 
   .sidebar h2 {
     display: block;
+    flex: 1 1 auto;
+    min-width: 0;
     margin: 0;
     color: #fff;
-    font-size: 18px;
+    font-size: 17px;
+    font-weight: 700;
     line-height: 1.2;
+    white-space: normal;
+    letter-spacing: 0;
   }
 
   .mobile-drawer-close {
@@ -2649,15 +2665,26 @@ th {
     align-items: center;
     justify-content: center;
     flex: 0 0 auto;
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     margin: 0;
     padding: 0;
-    border-radius: 12px;
-    background: rgba(255,255,255,.14);
+    border-radius: 999px;
+    background: rgba(255,255,255,.16);
     color: #fff;
-    font-size: 26px;
+    font-size: 25px;
     line-height: 1;
+    text-align: center;
+  }
+
+  .sidebar .mobile-drawer-close {
+    width: 36px;
+    min-width: 36px;
+    max-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    margin: 0;
+    padding: 0;
     text-align: center;
   }
 
@@ -2675,17 +2702,21 @@ th {
   .sidebar .nav-item {
     order: initial;
     flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     width: 100%;
     max-width: none;
     min-width: 0;
     height: auto;
-    min-height: 46px;
+    min-height: 48px;
     margin: 0;
-    padding: 12px 13px;
-    border-radius: 13px;
+    padding: 12px 14px;
+    border-radius: 14px;
     background: rgba(255,255,255,.12);
     color: #fff;
     font-size: 15px;
+    font-weight: 600;
     line-height: 1.2;
     text-align: left;
     white-space: normal;
@@ -2695,11 +2726,14 @@ th {
   .sidebar .nav-item:hover,
   .sidebar .nav-item.ativo {
     background: rgba(255,255,255,.24);
+    box-shadow: inset 3px 0 0 rgba(255,255,255,.6);
   }
 
   .sidebar .nav-sair {
     margin-top: auto;
-    background: rgba(254,226,226,.18);
+    margin-bottom: max(12px, env(safe-area-inset-bottom));
+    background: rgba(254,226,226,.17);
+    border: 1px solid rgba(254,226,226,.18);
   }
 
   .conteudo {
@@ -2719,29 +2753,29 @@ th {
 
 @media screen and (max-width: 430px) {
   .menu-mobile-toggle {
-    top: calc(9px + env(safe-area-inset-top));
+    top: calc(10px + env(safe-area-inset-top));
     left: 10px;
     width: 42px;
     height: 42px;
-    border-radius: 13px;
+    border-radius: 14px;
   }
 
   .sidebar {
-    width: min(86vw, 304px);
+    --mobile-drawer-largura: min(82vw, 300px);
     padding-left: 14px;
     padding-right: 14px;
   }
 
   .sidebar .nav-item {
     max-width: none;
-    min-height: 44px;
+    min-height: 46px;
     height: auto;
-    padding: 11px 12px;
+    padding: 11px 13px;
     font-size: 14px;
   }
 
   .conteudo {
-    padding-top: calc(56px + env(safe-area-inset-top));
+    padding-top: calc(74px + env(safe-area-inset-top));
     padding-bottom: 22px;
   }
 }
