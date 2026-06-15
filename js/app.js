@@ -36,6 +36,7 @@ let ultimoRelatorioDados = null;
 let sistemaIniciado = false;
 let atendimentoEditandoId = null;
 let financeiroEditandoId = null;
+let toastSistemaTimer = null;
 
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
@@ -79,12 +80,28 @@ function abrirMenuMobile() {
   mobileDrawerBackdrop.setAttribute("aria-hidden", "false");
 }
 
+function mostrarMensagemSistema(mensagem) {
+  const toast = document.getElementById("toastSistema");
+  if (!toast) return;
+
+  toast.textContent = mensagem;
+  toast.classList.add("visivel");
+
+  clearTimeout(toastSistemaTimer);
+  toastSistemaTimer = setTimeout(() => {
+    toast.classList.remove("visivel");
+  }, 2800);
+}
+
 btnAbrirMenuMobile?.addEventListener("click", abrirMenuMobile);
 btnFecharMenuMobile?.addEventListener("click", fecharMenuMobile);
 mobileDrawerBackdrop?.addEventListener("click", fecharMenuMobile);
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") fecharMenuMobile();
+  if (event.key === "Escape") {
+    fecharMenuMobile();
+    fecharModalServicosAtendimento();
+  }
 });
 
 window.mostrarTela = async function(id) {
@@ -92,6 +109,7 @@ window.mostrarTela = async function(id) {
   document.getElementById(id).classList.add("ativa");
   fecharMenuMobile();
   atualizarNavAtiva(id);
+  if (id === "agenda") fecharPainelNovoAtendimento();
 
   if (id === "agenda") await carregarAtendimentos();
   if (id === "financeiro") await carregarFinanceiro();
@@ -142,6 +160,8 @@ function conectarEventos() {
   ligar("btnImprimirRelatorio", "click", imprimirRelatorio);
   ligar("btnExportarRelatorioXLSX", "click", exportarRelatorioXLSX);
   ligar("btnExportarRelatorioCSV", "click", exportarRelatorioCSV);
+  ligar("atalhoDashboardAgenda", "click", () => window.mostrarTela("agenda"));
+  ligar("atalhoDashboardNovoAtendimento", "click", irParaNovoAtendimentoDashboard);
   ligar("relatorioPeriodo", "change", periodoRelatorioAlterado);
   ligar("relatorioDataInicial", "change", atualizarRelatorios);
   ligar("relatorioDataFinal", "change", atualizarRelatorios);
@@ -149,6 +169,14 @@ function conectarEventos() {
   ligar("agendaPagamento", "change", atualizarSimulacaoAgenda);
   ligar("agendaDescontoManual", "input", atualizarSimulacaoAgenda);
   ligar("agendaStatus", "change", atualizarSimulacaoAgenda);
+  ligar("btnAbrirNovoAtendimento", "click", abrirNovoAtendimentoMobile);
+  ligar("btnFecharNovoAtendimento", "click", fecharPainelNovoAtendimento);
+  ligar("btnFecharModalServicos", "click", fecharModalServicosAtendimento);
+  ligar("btnCancelarModalServicos", "click", fecharModalServicosAtendimento);
+  ligar("btnSalvarModalServicos", "click", salvarServicosModalAtendimento);
+  ligar("modalServicosAtendimento", "click", (event) => {
+    if (event.target?.id === "modalServicosAtendimento") fecharModalServicosAtendimento();
+  });
 }
 
 function ligar(id, evento, funcao) {
@@ -1934,6 +1962,147 @@ function opcoesServicosHtml(servicoSelecionadoId = "") {
   return html;
 }
 
+function agendaMobileAtiva() {
+  return window.matchMedia("(max-width: 900px)").matches;
+}
+
+function abrirPainelNovoAtendimento() {
+  const painel = document.querySelector("#agenda .painel-novo-atendimento");
+  if (!painel) return;
+
+  painel.classList.add("aberto");
+  document.body.classList.add("novo-atendimento-aberto");
+
+  requestAnimationFrame(() => {
+    painel.scrollTop = 0;
+
+    if (agendaMobileAtiva()) {
+      const conteudo = document.querySelector(".conteudo");
+      if (conteudo) conteudo.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } else {
+      painel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+
+function abrirNovoAtendimentoMobile() {
+  limparAtendimento();
+  abrirPainelNovoAtendimento();
+}
+
+async function irParaNovoAtendimentoDashboard() {
+  await window.mostrarTela("agenda");
+  limparAtendimento();
+  abrirPainelNovoAtendimento();
+}
+
+function fecharPainelNovoAtendimento() {
+  const painel = document.querySelector("#agenda .painel-novo-atendimento");
+  if (!painel) return;
+
+  painel.classList.remove("aberto");
+  document.body.classList.remove("novo-atendimento-aberto");
+}
+
+window.abrirSeletorServicosAtendimento = function() {
+  if (!agendaMobileAtiva()) {
+    adicionarLinhaServicoAtendimento();
+    return;
+  }
+
+  abrirModalServicosAtendimento();
+};
+
+function abrirModalServicosAtendimento() {
+  renderizarModalServicosAtendimento();
+
+  const modal = document.getElementById("modalServicosAtendimento");
+  if (!modal) return;
+
+  modal.classList.remove("escondido");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-servicos-aberto");
+}
+
+function fecharModalServicosAtendimento() {
+  const modal = document.getElementById("modalServicosAtendimento");
+  if (!modal) return;
+
+  modal.classList.add("escondido");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-servicos-aberto");
+}
+
+function renderizarModalServicosAtendimento() {
+  const lista = document.getElementById("listaModalServicos");
+  if (!lista) return;
+
+  const servicosAtivos = servicos.filter(s => s.ativo !== false);
+
+  if (!servicosAtivos.length) {
+    lista.innerHTML = `<p class="modal-servicos-vazio">Nenhum serviço ativo cadastrado.</p>`;
+    return;
+  }
+
+  lista.innerHTML = servicosAtivos.map((s, index) => {
+    const inputId = `modalServicoAtendimento${index}`;
+    const duracao = s.duracao ? `<span>${escapar(s.duracao)}</span>` : "";
+
+    return `
+      <label class="modal-servico-opcao" for="${inputId}">
+        <input id="${inputId}" type="checkbox" value="${escapar(s.id)}">
+        <span class="modal-servico-info">
+          <strong>${escapar(nomeServicoSelect(s.nome))}</strong>
+          ${duracao}
+        </span>
+        <span class="modal-servico-preco">${dinheiro(s.preco)}</span>
+      </label>
+    `;
+  }).join("");
+}
+
+function adicionarServicoSelecionadoAtendimento(servico) {
+  const tbody = document.getElementById("listaServicosAtendimento");
+  if (!tbody || !servico) return;
+
+  const linhaVazia = Array.from(tbody.querySelectorAll("tr")).find(tr => {
+    const select = tr.querySelector(".item-servico");
+    return select && !select.value;
+  });
+
+  if (linhaVazia) {
+    const select = linhaVazia.querySelector(".item-servico");
+    select.value = servico.id;
+    servicoAtendimentoAlterado(select);
+    return;
+  }
+
+  adicionarLinhaServicoAtendimento({
+    servicoId: servico.id,
+    preco: numero(servico.preco),
+    desconto: 0
+  }, false);
+}
+
+function salvarServicosModalAtendimento() {
+  const selecionados = Array.from(document.querySelectorAll("#listaModalServicos input[type='checkbox']:checked"))
+    .map(input => input.value);
+
+  if (!selecionados.length) {
+    alert("Selecione pelo menos um serviço.");
+    return;
+  }
+
+  selecionados.forEach(id => {
+    const servico = servicos.find(s => String(s.id) === String(id));
+    adicionarServicoSelecionadoAtendimento(servico);
+  });
+
+  fecharModalServicosAtendimento();
+  atualizarSimulacaoAgenda();
+}
+
 window.adicionarLinhaServicoAtendimento = function(item = null, recalcular = true) {
   const tbody = document.getElementById("listaServicosAtendimento");
   if (!tbody) return;
@@ -1984,9 +2153,6 @@ window.removerLinhaServicoAtendimento = function(botao) {
   const tr = botao.closest("tr");
   if (tr) tr.remove();
 
-  const tbody = document.getElementById("listaServicosAtendimento");
-  if (tbody && tbody.children.length === 0) adicionarLinhaServicoAtendimento(null, false);
-
   atualizarSimulacaoAgenda();
 };
 
@@ -1996,8 +2162,7 @@ function limparTabelaServicosAtendimento() {
 }
 
 function garantirLinhaServicoAtendimento() {
-  const tbody = document.getElementById("listaServicosAtendimento");
-  if (tbody && tbody.children.length === 0) adicionarLinhaServicoAtendimento(null, false);
+  // A lista pode iniciar vazia; o botão "+ Adicionar Serviço" cria os itens.
 }
 
 function obterItensServicosAtendimento() {
@@ -2164,8 +2329,6 @@ function obterResumoAgenda() {
 }
 
 function atualizarSimulacaoAgenda() {
-  garantirLinhaServicoAtendimento();
-
   const resumo = obterResumoAgenda();
   const forma = document.getElementById("agendaPagamento")?.value || "PIX";
   const descontoManual = numero(document.getElementById("agendaDescontoManual")?.value);
@@ -2240,6 +2403,7 @@ async function salvarAtendimento() {
     status: document.getElementById("agendaStatus").value,
     atualizadoEm: serverTimestamp()
   };
+  let mensagemSucesso = "";
 
   if (atendimentoEditandoId) {
     const antigo = atendimentos.find(a => a.id === atendimentoEditandoId);
@@ -2262,7 +2426,7 @@ async function salvarAtendimento() {
       });
     }
 
-    alert("Atendimento atualizado com sucesso!");
+    mensagemSucesso = "Atendimento atualizado com sucesso.";
   } else {
     atendimento.criadoEm = serverTimestamp();
     atendimento.estoqueBaixado = false;
@@ -2274,15 +2438,17 @@ async function salvarAtendimento() {
       await concluirAtendimentoInterno(ref.id, false);
     }
 
-    alert("Atendimento salvo com sucesso!");
+    mensagemSucesso = "Atendimento salvo com sucesso.";
   }
 
   limparAtendimento();
+  fecharPainelNovoAtendimento();
   await carregarProdutos();
   await carregarMovimentacoesEstoque();
   await carregarAtendimentos();
   await carregarFinanceiro();
   atualizarDashboard();
+  mostrarMensagemSistema(mensagemSucesso);
 }
 
 function limparAtendimento() {
@@ -2296,7 +2462,6 @@ function limparAtendimento() {
 
   limparTabelaServicosAtendimento();
   limparTabelaMateriaisAtendimento();
-  adicionarLinhaServicoAtendimento(null, false);
 
   const btn = document.getElementById("btnSalvarAtendimento");
   if (btn) btn.textContent = "Salvar Atendimento";
@@ -2420,6 +2585,7 @@ window.editarAtendimento = function(id) {
   if (btn) btn.textContent = "Atualizar Atendimento";
 
   atualizarSimulacaoAgenda();
+  abrirPainelNovoAtendimento();
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
 

@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema Nail Design</title>
-  <link rel="stylesheet" href="css/style.css?v=mobile-drawer-polish-3">
+  <link rel="stylesheet" href="css/style.css?v=agenda-servicos-compactos-4">
 </head>
 <body>
 
   <button id="btnAbrirMenuMobile" class="menu-mobile-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menuLateralMobile">☰</button>
   <div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop" aria-hidden="true"></div>
+  <div id="toastSistema" class="toast-sistema" role="status" aria-live="polite"></div>
 
   <div class="app">
 
@@ -74,6 +75,28 @@
           <div class="card">
             <span>Lucro Estimado Hoje</span>
             <strong id="lucroHoje">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="dashboard-acessos">
+          <h2>Acessos rápidos</h2>
+
+          <div class="dashboard-acessos-grid">
+            <button id="atalhoDashboardAgenda" class="atalho-dashboard atalho-dashboard-agenda" type="button">
+              <span class="atalho-dashboard-icone">📅</span>
+              <span class="atalho-dashboard-texto">
+                <strong>Agenda</strong>
+                <small>Ver atendimentos</small>
+              </span>
+            </button>
+
+            <button id="atalhoDashboardNovoAtendimento" class="atalho-dashboard atalho-dashboard-novo" type="button">
+              <span class="atalho-dashboard-icone">＋</span>
+              <span class="atalho-dashboard-texto">
+                <strong>Novo Atendimento</strong>
+                <small>Cadastrar agora</small>
+              </span>
+            </button>
           </div>
         </div>
       </section>
@@ -331,8 +354,13 @@
       <section id="agenda" class="tela">
         <h1>Agenda</h1>
 
-        <div class="painel">
+        <button id="btnAbrirNovoAtendimento" class="btn-novo-atendimento-mobile" type="button">
+          + Novo Atendimento
+        </button>
+
+        <div class="painel painel-novo-atendimento">
           <h3>Novo Atendimento</h3>
+          <button id="btnFecharNovoAtendimento" class="btn-fechar-novo-atendimento" type="button" aria-label="Fechar novo atendimento">×</button>
 
           <label>Cliente</label>
           <select id="agendaCliente"></select>
@@ -341,7 +369,7 @@
             <div class="servicos-atendimento-topo">
               <h3>Serviços do Atendimento</h3>
 
-              <button type="button" class="btn-adicionar-servico" onclick="adicionarLinhaServicoAtendimento()">
+              <button type="button" class="btn-adicionar-servico" onclick="abrirSeletorServicosAtendimento()">
                 + Adicionar Serviço
               </button>
             </div>
@@ -462,7 +490,23 @@
           <button id="btnSalvarAtendimento">Salvar Atendimento</button>
         </div>
 
-        <div class="painel">
+        <div id="modalServicosAtendimento" class="modal-overlay modal-servicos-atendimento escondido" aria-hidden="true">
+          <div class="modal-card modal-servicos-card">
+            <div class="modal-topo">
+              <h3>Selecionar Serviços</h3>
+              <button id="btnFecharModalServicos" class="btn-fechar-modal" type="button" aria-label="Fechar modal">×</button>
+            </div>
+
+            <div id="listaModalServicos" class="lista-modal-servicos"></div>
+
+            <div class="modal-acoes">
+              <button id="btnCancelarModalServicos" type="button" class="btn-secundario">Cancelar</button>
+              <button id="btnSalvarModalServicos" type="button">Salvar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="painel painel-lista-atendimentos">
           <h3>Atendimentos</h3>
           <div id="listaAtendimentos"></div>
         </div>
@@ -706,6 +750,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script type="module" src="js/app.js?v=mobile-drawer-6"></script>
+  <script type="module" src="js/app.js?v=agenda-servicos-compactos-4"></script>
 </body>
 </html>
