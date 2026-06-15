@@ -101,6 +101,8 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     fecharMenuMobile();
     fecharModalServicosAtendimento();
+    fecharModalMateriaisAtendimento();
+    fecharDetalheAtendimento();
   }
 });
 
@@ -174,8 +176,19 @@ function conectarEventos() {
   ligar("btnFecharModalServicos", "click", fecharModalServicosAtendimento);
   ligar("btnCancelarModalServicos", "click", fecharModalServicosAtendimento);
   ligar("btnSalvarModalServicos", "click", salvarServicosModalAtendimento);
+  ligar("btnFecharModalMateriais", "click", fecharModalMateriaisAtendimento);
+  ligar("btnCancelarModalMateriais", "click", fecharModalMateriaisAtendimento);
+  ligar("btnSalvarModalMateriais", "click", salvarMateriaisModalAtendimento);
+  ligar("listaAtendimentos", "click", abrirDetalheAtendimentoDaLista);
+  ligar("listaAtendimentos", "keydown", abrirDetalheAtendimentoPeloTeclado);
   ligar("modalServicosAtendimento", "click", (event) => {
     if (event.target?.id === "modalServicosAtendimento") fecharModalServicosAtendimento();
+  });
+  ligar("modalMateriaisAtendimento", "click", (event) => {
+    if (event.target?.id === "modalMateriaisAtendimento") fecharModalMateriaisAtendimento();
+  });
+  ligar("modalDetalheAtendimento", "click", (event) => {
+    if (event.target?.id === "modalDetalheAtendimento") fecharDetalheAtendimento();
   });
 }
 
@@ -198,6 +211,13 @@ function definirDataHoje() {
   if (document.getElementById("finData")) document.getElementById("finData").value = hoje;
   if (document.getElementById("reposicaoData")) document.getElementById("reposicaoData").value = hoje;
   if (document.getElementById("relatorioDataFinal")) document.getElementById("relatorioDataFinal").value = hoje;
+}
+
+function formatarDataHoraAtendimento(atendimento) {
+  const data = formatarDataBR(atendimento?.data) || "-";
+  const hora = atendimento?.hora ? ` às ${atendimento.hora}` : "";
+
+  return `${data}${hora}`;
 }
 
 function dinheiro(valor) {
@@ -2200,6 +2220,91 @@ function obterItensServicosAtendimento() {
 
 /* AGENDA - MATERIAIS */
 
+window.abrirSeletorMateriaisAtendimento = function() {
+  if (!agendaMobileAtiva()) {
+    adicionarLinhaMaterialAtendimento();
+    return;
+  }
+
+  abrirModalMateriaisAtendimento();
+};
+
+function abrirModalMateriaisAtendimento() {
+  renderizarModalMateriaisAtendimento();
+
+  const modal = document.getElementById("modalMateriaisAtendimento");
+  if (!modal) return;
+
+  modal.classList.remove("escondido");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-materiais-aberto");
+}
+
+function fecharModalMateriaisAtendimento() {
+  const modal = document.getElementById("modalMateriaisAtendimento");
+  if (!modal) return;
+
+  modal.classList.add("escondido");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-materiais-aberto");
+}
+
+function renderizarModalMateriaisAtendimento() {
+  const lista = document.getElementById("listaModalMateriais");
+  if (!lista) return;
+
+  const produtosAtivos = produtos.filter(p => p.ativo !== false);
+
+  if (!produtosAtivos.length) {
+    lista.innerHTML = `<p class="modal-servicos-vazio">Nenhum material ativo cadastrado.</p>`;
+    return;
+  }
+
+  lista.innerHTML = produtosAtivos.map((p, index) => {
+    const inputId = `modalMaterialAtendimento${index}`;
+    const estoque = `${numero(p.quantidade)} ${escapar(p.unidade || "")}`.trim();
+
+    return `
+      <label class="modal-servico-opcao modal-material-opcao" for="${inputId}">
+        <input id="${inputId}" type="checkbox" value="${escapar(p.id)}">
+        <span class="modal-servico-info">
+          <strong>${escapar(p.nome)}</strong>
+          <span>Estoque: ${estoque || "0"}</span>
+        </span>
+        <span class="modal-servico-preco">${dinheiro(p.custoUnitario || 0)}</span>
+      </label>
+    `;
+  }).join("");
+}
+
+function adicionarMaterialSelecionadoAtendimento(produto) {
+  if (!produto) return;
+
+  adicionarLinhaMaterialAtendimento({
+    produtoId: produto.id,
+    quantidade: 1,
+    custoUnitario: numero(produto.custoUnitario)
+  }, false);
+}
+
+function salvarMateriaisModalAtendimento() {
+  const selecionados = Array.from(document.querySelectorAll("#listaModalMateriais input[type='checkbox']:checked"))
+    .map(input => input.value);
+
+  if (!selecionados.length) {
+    alert("Selecione pelo menos um material.");
+    return;
+  }
+
+  selecionados.forEach(id => {
+    const produto = produtos.find(p => String(p.id) === String(id));
+    adicionarMaterialSelecionadoAtendimento(produto);
+  });
+
+  fecharModalMateriaisAtendimento();
+  atualizarSimulacaoAgenda();
+}
+
 function opcoesProdutosHtml(produtoSelecionadoId = "") {
   let html = `<option value="">Selecione...</option>`;
 
@@ -2207,7 +2312,7 @@ function opcoesProdutosHtml(produtoSelecionadoId = "") {
     .filter(p => p.ativo !== false)
     .forEach(p => {
       const selected = String(p.id) === String(produtoSelecionadoId) ? "selected" : "";
-      html += `<option value="${p.id}" ${selected}>${escapar(p.nome)} - ${numero(p.quantidade)} ${escapar(p.unidade || "")}</option>`;
+      html += `<option value="${p.id}" ${selected}>${escapar(p.nome)}</option>`;
     });
 
   return html;
@@ -2400,6 +2505,7 @@ async function salvarAtendimento() {
     lucroReal,
     data: document.getElementById("agendaData").value,
     hora: document.getElementById("agendaHora").value,
+    observacoes: document.getElementById("agendaObservacoes")?.value.trim() || "",
     status: document.getElementById("agendaStatus").value,
     atualizadoEm: serverTimestamp()
   };
@@ -2459,6 +2565,8 @@ function limparAtendimento() {
   document.getElementById("agendaPagamento").value = "PIX";
   document.getElementById("agendaStatus").value = "Agendado";
   document.getElementById("agendaDescontoManual").value = 0;
+  const obs = document.getElementById("agendaObservacoes");
+  if (obs) obs.value = "";
 
   limparTabelaServicosAtendimento();
   limparTabelaMateriaisAtendimento();
@@ -2489,36 +2597,27 @@ function renderAtendimentos() {
   }
 
   div.innerHTML = `
-    <table>
+    <table class="tabela-agenda-resumo">
       <thead>
         <tr>
-          <th>Data</th>
-          <th>Hora</th>
           <th>Cliente</th>
+          <th>Data/Hora</th>
           <th>Serviço(s)</th>
-          <th>Forma</th>
           <th>Total Cliente</th>
-          <th>Líquido</th>
-          <th>Materiais</th>
-          <th>Lucro Real</th>
           <th>Status</th>
-          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         ${atendimentos.map(a => `
-          <tr>
-            <td>${escapar(a.data)}</td>
-            <td>${escapar(a.hora)}</td>
+          <tr class="linha-atendimento-resumo" data-atendimento-id="${escapar(a.id)}" tabindex="0" role="button" aria-label="Ver detalhes do atendimento de ${escapar(a.clienteNome)}">
             <td>${escapar(a.clienteNome)}</td>
-            <td>${escapar(a.servicoNome)}</td>
-            <td>${escapar(a.formaPagamento)}</td>
+            <td>${escapar(formatarDataHoraAtendimento(a))}</td>
+            <td>${escapar(nomeServicosAtendimento(a))}</td>
             <td>${dinheiro(a.totalCliente || a.valorBase)}</td>
-            <td>${dinheiro(a.valorLiquido || a.valorBase)}</td>
-            <td>${dinheiro(a.custoMateriais || 0)}</td>
-            <td>${dinheiro(a.lucroReal ?? a.valorLiquido ?? a.valorBase)}</td>
-            <td>${badgeStatus(a.status)}</td>
-            <td class="acoes">${acoesAtendimento(a)}</td>
+            <td>
+              ${badgeStatus(a.status)}
+              <span class="agenda-ver-detalhes">Ver detalhes ›</span>
+            </td>
           </tr>
         `).join("")}
       </tbody>
@@ -2526,30 +2625,217 @@ function renderAtendimentos() {
   `;
 }
 
-function acoesAtendimento(a) {
+function abrirDetalheAtendimentoDaLista(event) {
+  if (event.target.closest("button")) return;
+
+  const linha = event.target.closest("[data-atendimento-id]");
+  if (!linha) return;
+
+  window.abrirDetalheAtendimento(linha.dataset.atendimentoId);
+}
+
+function abrirDetalheAtendimentoPeloTeclado(event) {
+  if (event.key !== "Enter" && event.key !== " ") return;
+
+  const linha = event.target.closest("[data-atendimento-id]");
+  if (!linha) return;
+
+  event.preventDefault();
+  window.abrirDetalheAtendimento(linha.dataset.atendimentoId);
+}
+
+function observacoesAtendimento(a) {
+  const texto = a?.observacoes || a?.observacao || "";
+  return String(texto).trim() || "Sem observações.";
+}
+
+function inicialCliente(nome) {
+  return String(nome || "?").trim().charAt(0).toUpperCase() || "?";
+}
+
+function servicosDetalheAtendimento(a) {
+  if (Array.isArray(a.itens) && a.itens.length) {
+    return a.itens.map(item => ({
+      nome: nomeServicoSelect(item.servicoNome || "Serviço"),
+      preco: numero(item.total || item.preco)
+    }));
+  }
+
+  return [{
+    nome: nomeServicoSelect(a.servicoNome || "Serviço"),
+    preco: numero(a.totalCliente || a.valorBase)
+  }];
+}
+
+function duracaoAtendimento(a) {
+  if (!Array.isArray(a.itens)) return "";
+
+  const duracoes = a.itens
+    .map(item => servicos.find(s => String(s.id) === String(item.servicoId))?.duracao)
+    .filter(Boolean);
+
+  return duracoes.length ? duracoes.join(" + ") : "";
+}
+
+function fecharDetalheAtendimento() {
+  const modal = document.getElementById("modalDetalheAtendimento");
+  if (!modal) return;
+
+  modal.classList.add("escondido");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("detalhe-atendimento-aberto");
+}
+
+window.fecharDetalheAtendimento = fecharDetalheAtendimento;
+
+window.abrirDetalheAtendimento = function(id) {
+  const atendimento = atendimentos.find(item => String(item.id) === String(id));
+  const modal = document.getElementById("modalDetalheAtendimento");
+  const conteudo = document.getElementById("conteudoDetalheAtendimento");
+
+  if (!atendimento || !modal || !conteudo) return;
+
+  const servicosDetalhe = servicosDetalheAtendimento(atendimento);
+  const duracao = duracaoAtendimento(atendimento);
+
+  conteudo.innerHTML = `
+    <div class="detalhe-atendimento-topo">
+      <button type="button" class="btn-voltar-detalhe" onclick="fecharDetalheAtendimento()" aria-label="Fechar detalhes">×</button>
+      <div class="detalhe-atendimento-perfil">
+        <span class="detalhe-avatar">${escapar(inicialCliente(atendimento.clienteNome))}</span>
+        <div>
+          <span class="detalhe-subtitulo">Atendimento</span>
+          <h3 id="tituloDetalheAtendimento">${escapar(atendimento.clienteNome || "Cliente")}</h3>
+          ${badgeStatus(atendimento.status || "Agendado")}
+        </div>
+      </div>
+    </div>
+
+    <div class="detalhe-info-grid">
+      <div>
+        <span>Data</span>
+        <strong>${escapar(formatarDataBR(atendimento.data) || "-")}</strong>
+      </div>
+      <div>
+        <span>Hora</span>
+        <strong>${escapar(atendimento.hora || "-")}</strong>
+      </div>
+      ${duracao ? `
+        <div>
+          <span>Duração</span>
+          <strong>${escapar(duracao)}</strong>
+        </div>
+      ` : ""}
+    </div>
+
+    <div class="detalhe-secao">
+      <h4>Serviços</h4>
+      <div class="detalhe-servicos-lista">
+        ${servicosDetalhe.map(item => `
+          <span class="detalhe-servico-chip">
+            <span>${escapar(item.nome)}</span>
+            <strong>${dinheiro(item.preco)}</strong>
+          </span>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="detalhe-total-card">
+      <span>Total para Cliente</span>
+      <strong>${dinheiro(atendimento.totalCliente || atendimento.valorBase)}</strong>
+    </div>
+
+    <div class="detalhe-info-grid detalhe-info-grid-menor">
+      <div>
+        <span>Pagamento</span>
+        <strong>${escapar(atendimento.formaPagamento || "-")}</strong>
+      </div>
+      <div>
+        <span>Status</span>
+        <strong>${escapar(atendimento.status || "-")}</strong>
+      </div>
+    </div>
+
+    <div class="detalhe-secao">
+      <h4>Observações</h4>
+      <p class="detalhe-observacoes">${escapar(observacoesAtendimento(atendimento))}</p>
+    </div>
+
+    <div class="detalhe-acoes">
+      ${acoesAtendimento(atendimento, "detalhe")}
+    </div>
+  `;
+
+  modal.classList.remove("escondido");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("detalhe-atendimento-aberto");
+};
+
+function jsStringAtributo(valor) {
+  return JSON.stringify(String(valor || ""))
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function acaoClickAtendimento(nomeFuncao, id, contexto) {
+  const parametro = jsStringAtributo(id);
+  if (contexto === "detalhe") return `${nomeFuncao}Detalhe(${parametro})`;
+  return `event.stopPropagation(); ${nomeFuncao}(${parametro})`;
+}
+
+function acoesAtendimento(a, contexto = "lista") {
+  const id = a.id;
+
   if (a.status === "Concluído") {
     return `
-      <button class="btn-acao btn-editar" onclick="editarAtendimento('${a.id}')">Editar</button>
-      <button class="btn-acao btn-alerta" onclick="reabrirAtendimento('${a.id}')">Reabrir</button>
-      <button class="btn-acao btn-excluir" onclick="excluirAtendimento('${a.id}')">Excluir</button>
+      <button class="btn-acao btn-editar" onclick="${acaoClickAtendimento("editarAtendimento", id, contexto)}">Editar</button>
+      <button class="btn-acao btn-alerta" onclick="${acaoClickAtendimento("reabrirAtendimento", id, contexto)}">Reabrir</button>
+      <button class="btn-acao btn-excluir" onclick="${acaoClickAtendimento("excluirAtendimento", id, contexto)}">Excluir</button>
     `;
   }
 
   if (a.status === "Cancelado") {
     return `
-      <button class="btn-acao btn-editar" onclick="editarAtendimento('${a.id}')">Editar</button>
-      <button class="btn-acao btn-alerta" onclick="reabrirAtendimento('${a.id}')">Reabrir</button>
-      <button class="btn-acao btn-excluir" onclick="excluirAtendimento('${a.id}')">Excluir</button>
+      <button class="btn-acao btn-editar" onclick="${acaoClickAtendimento("editarAtendimento", id, contexto)}">Editar</button>
+      <button class="btn-acao btn-alerta" onclick="${acaoClickAtendimento("reabrirAtendimento", id, contexto)}">Reabrir</button>
+      <button class="btn-acao btn-excluir" onclick="${acaoClickAtendimento("excluirAtendimento", id, contexto)}">Excluir</button>
     `;
   }
 
   return `
-    <button class="btn-acao btn-editar" onclick="editarAtendimento('${a.id}')">Editar</button>
-    <button class="btn-acao btn-concluir" onclick="concluirAtendimento('${a.id}')">Concluir</button>
-    <button class="btn-acao btn-cancelar" onclick="cancelarAtendimento('${a.id}')">Cancelar</button>
-    <button class="btn-acao btn-excluir" onclick="excluirAtendimento('${a.id}')">Excluir</button>
+    <button class="btn-acao btn-editar" onclick="${acaoClickAtendimento("editarAtendimento", id, contexto)}">Editar</button>
+    <button class="btn-acao btn-concluir" onclick="${acaoClickAtendimento("concluirAtendimento", id, contexto)}">Concluir</button>
+    <button class="btn-acao btn-cancelar" onclick="${acaoClickAtendimento("cancelarAtendimento", id, contexto)}">Cancelar</button>
+    <button class="btn-acao btn-excluir" onclick="${acaoClickAtendimento("excluirAtendimento", id, contexto)}">Excluir</button>
   `;
 }
+
+window.editarAtendimentoDetalhe = function(id) {
+  fecharDetalheAtendimento();
+  window.editarAtendimento(id);
+};
+
+window.concluirAtendimentoDetalhe = async function(id) {
+  fecharDetalheAtendimento();
+  await window.concluirAtendimento(id);
+};
+
+window.cancelarAtendimentoDetalhe = async function(id) {
+  fecharDetalheAtendimento();
+  await window.cancelarAtendimento(id);
+};
+
+window.reabrirAtendimentoDetalhe = async function(id) {
+  fecharDetalheAtendimento();
+  await window.reabrirAtendimento(id);
+};
+
+window.excluirAtendimentoDetalhe = async function(id) {
+  fecharDetalheAtendimento();
+  await window.excluirAtendimento(id);
+};
 
 window.editarAtendimento = function(id) {
   const a = atendimentos.find(item => item.id === id);
@@ -2563,6 +2849,8 @@ window.editarAtendimento = function(id) {
   document.getElementById("agendaPagamento").value = a.formaPagamento || "PIX";
   document.getElementById("agendaStatus").value = a.status || "Agendado";
   document.getElementById("agendaDescontoManual").value = numero(a.descontoManual);
+  const obs = document.getElementById("agendaObservacoes");
+  if (obs) obs.value = a.observacoes || a.observacao || "";
 
   limparTabelaServicosAtendimento();
   limparTabelaMateriaisAtendimento();
@@ -2586,7 +2874,11 @@ window.editarAtendimento = function(id) {
 
   atualizarSimulacaoAgenda();
   abrirPainelNovoAtendimento();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  requestAnimationFrame(() => {
+    const painel = document.querySelector("#agenda .painel-novo-atendimento");
+    if (painel) painel.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
 };
 
 window.excluirAtendimento = async function(id) {
@@ -2913,6 +3205,54 @@ function renderFinanceiro() {
   }
 
   div.innerHTML = `
+    <div class="financeiro-cards-mobile">
+      ${financeiro.map(f => {
+        const tipo = f.tipo || "Entrada";
+        const classeTipo = tipo === "Saída" ? "saida" : "entrada";
+        const valorPrincipal = numero(f.valor);
+        const clienteFornecedor = f.cliente ? `
+          <div class="financeiro-card-linha">
+            <span>Cliente/Fornecedor</span>
+            <strong>${escapar(f.cliente)}</strong>
+          </div>
+        ` : "";
+
+        return `
+          <article class="financeiro-card financeiro-card-${classeTipo}">
+            <div class="financeiro-card-topo">
+              <span class="financeiro-chip financeiro-chip-${classeTipo}">${escapar(tipo)}</span>
+              <strong class="financeiro-card-valor">${dinheiro(valorPrincipal)}</strong>
+            </div>
+
+            <div class="financeiro-card-data">${escapar(formatarDataBR(f.data) || "-")}</div>
+
+            <div class="financeiro-card-corpo">
+              <div class="financeiro-card-linha">
+                <span>Categoria</span>
+                <strong>${escapar(f.categoria || "-")}</strong>
+              </div>
+
+              <div class="financeiro-card-linha financeiro-card-descricao">
+                <span>Descrição</span>
+                <strong>${escapar(f.descricao || "-")}</strong>
+              </div>
+
+              ${clienteFornecedor}
+
+              <div class="financeiro-card-meta">
+                <span>${escapar(f.formaPagamento || "-")}</span>
+                <span>${escapar(f.status || "-")}</span>
+              </div>
+            </div>
+
+            <div class="financeiro-card-acoes">
+              ${acoesFinanceiro(f)}
+            </div>
+          </article>
+        `;
+      }).join("")}
+    </div>
+
     <table>
       <thead>
         <tr>
